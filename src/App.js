@@ -58,11 +58,26 @@ const useStyles = makeStyles((theme) => ({
 function App(props) {
     const [value, setValue] = useState(0);
     const classes = useStyles();
+    const [pomodoroOptions, setPomodoroOptions] = useState({
+        pomodoro: 25,
+        shortBreak: 5,
+        longBreak: 10,
+        longBreakInterval: 4,
+        autoStarts: {
+            break: false,
+            pomodoro: false
+        },
+        alarmSound: "wood",
+        alarmVolume: 50,
+        alarmRepeat: 4,
+        tickingSound: "none",
+        tickingVolume: 50
+    });
 
     const handleChange = (e, newValue) => {
         setValue(newValue)
     }
-
+    
     return (
         <Container maxWidth="xl" className={classes.root}>
             <Container maxWidth="sm" className={classes.subRoot}>
@@ -71,7 +86,7 @@ function App(props) {
                         <CheckCircleIcon />
                         <Typography variant="h6">Pomofocus</Typography>
                     </div>
-                    <Settings/>
+                    <Settings pomodoroOptions={pomodoroOptions} setPomodoroOptions={setPomodoroOptions}/>
                 </Container>
                 <Paper className={classes.paper} elevation={0}>
                     <Tabs value={value} centered onChange={handleChange} aria-label="Pomodoro tabs" TabIndicatorProps={{ style: { display: "none" } }}>
