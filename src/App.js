@@ -6,11 +6,13 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // Local imports 
 import Task from "./components/Task";
+import Settings from "./components/Settings";
+
+//React
 import { useState } from 'react';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 //Icons
-import SettingsIcon from '@material-ui/icons/Settings';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,11 +36,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.secondary.main,
         padding: "10px",
         borderBottom: "1px solid rgba(0,0,0,0.2)"
-    },
-    appBarButton: {
-        backgroundColor: "rgba(255,255,255,0.2)",
-        color: "#fff",
-        fontSize: "13px"
     },
     paper: {
         display: "flex",
@@ -74,7 +71,7 @@ function App(props) {
                         <CheckCircleIcon />
                         <Typography variant="h6">Pomofocus</Typography>
                     </div>
-                    <Button className={classes.appBarButton} variant="contained" size="small" disableElevation startIcon={<SettingsIcon />}>Settings</Button>
+                    <Settings/>
                 </Container>
                 <Paper className={classes.paper} elevation={0}>
                     <Tabs value={value} centered onChange={handleChange} aria-label="Pomodoro tabs" TabIndicatorProps={{ style: { display: "none" } }}>
