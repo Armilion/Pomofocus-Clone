@@ -1,12 +1,13 @@
 import './App.css';
 
 // MUI
-import { Button, Tab, Tabs, Typography, Paper, Container} from '@material-ui/core';
+import { Button, Tab, Tabs, Typography, Paper, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Local imports 
 import Task from "./components/Task";
 import Settings from "./components/Settings";
+import TabPanel from './components/TabPanel';
 
 //React
 import { useState } from 'react';
@@ -59,9 +60,9 @@ function App(props) {
     const [value, setValue] = useState(0);
     const classes = useStyles();
     const [pomodoroOptions, setPomodoroOptions] = useState({
-        pomodoro: 25,
-        shortBreak: 5,
-        longBreak: 10,
+        pomodoro: 1500,
+        shortBreak: 300,
+        longBreak: 600,
         longBreakInterval: 4,
         autoStarts: {
             break: false,
@@ -77,16 +78,16 @@ function App(props) {
     const handleChange = (e, newValue) => {
         setValue(newValue)
     }
-    
+
     return (
         <Container maxWidth="xl" className={classes.root}>
             <Container maxWidth="sm" className={classes.subRoot}>
                 <Container className={classes.appBar}>
-                    <div style={{display:"flex"}}>
+                    <div style={{ display: "flex" }}>
                         <CheckCircleIcon />
                         <Typography variant="h6">Pomofocus</Typography>
                     </div>
-                    <Settings pomodoroOptions={pomodoroOptions} setPomodoroOptions={setPomodoroOptions}/>
+                    <Settings pomodoroOptions={pomodoroOptions} setPomodoroOptions={setPomodoroOptions} />
                 </Container>
                 <Paper className={classes.paper} elevation={0}>
                     <Tabs value={value} centered onChange={handleChange} aria-label="Pomodoro tabs" TabIndicatorProps={{ style: { display: "none" } }}>
@@ -94,12 +95,14 @@ function App(props) {
                         <Tab label="Short Break" id='tab-1' aria-controls='tabpanel-1' />
                         <Tab label="Long Break" id='tab-2' aria-controls='tabpanel-2' />
                     </Tabs>
-                    <Typography variant="h1">25:00</Typography>
+                    <TabPanel value={value} index={0} timer={pomodoroOptions.pomodoro}>test</TabPanel>
+                    <TabPanel value={value} index={1} timer={pomodoroOptions.shortBreak}>toast</TabPanel>
+                    <TabPanel value={value} index={2} timer={pomodoroOptions.longBreak}>toasiteizt</TabPanel>
                     <Button variant="contained" className={classes.startButton} disableElevation>Start</Button>
                 </Paper>
-                <Task/>
-            </Container>
-        </Container>
+                <Task />
+            </Container >
+        </Container >
     );
 }
 
