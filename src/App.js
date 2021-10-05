@@ -10,7 +10,7 @@ import Settings from "./components/Settings";
 import TabPanel from './components/TabPanel';
 
 //React
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 //Icons
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -57,12 +57,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 function App(props) {
-    const [currentTab, setCurrentTab] = useState(0);
     const classes = useStyles();
-    const [pomodoroOptions, setPomodoroOptions] = useState({
-        pomodoro: 1500,
-        shortBreak: 300,
-        longBreak: 600,
+    const [start, setstart] = useState(false)
+    const [pomodoroSettings, setpomodoroSettings] = useState({
+        currentTab: 0,
+        pomodoro: { initValue: 1500, currentValue: 1500 },
+        shortBreak: { initValue: 300, currentValue: 300 },
+        longBreak: { initValue: 600, currentValue: 600 },
         longBreakInterval: 4,
         autoStarts: {
             break: false,
@@ -76,12 +77,35 @@ function App(props) {
     });
 
     const handleChange = (e, newValue) => {
-        setCurrentTab(newValue)
+        if (pomodoroSettings.currentTab === 0)
+            setpomodoroSettings({ ...pomodoroSettings, currentTab: newValue, pomodoro: { ...pomodoroSettings.pomodoro, currentValue: pomodoroSettings.pomodoro.initValue } })
+        else if (pomodoroSettings.currentTab === 1)
+            setpomodoroSettings({ ...pomodoroSettings, currentTab: newValue, shortBreak: { ...pomodoroSettings.shortBreak, currentValue: pomodoroSettings.shortBreak.initValue } })
+        else if (pomodoroSettings.currentTab === 2)
+            setpomodoroSettings({ ...pomodoroSettings, currentTab: newValue, longBreak: { ...pomodoroSettings.longBreak, currentValue: pomodoroSettings.longBreak.initValue } })
+        setstart(false);
     }
 
     const handleStartStop = () => {
-
+        setstart(!start);
     }
+
+    useEffect(() => {
+        if (start) {
+            let interval = setInterval(() => {
+                if (pomodoroSettings.currentTab === 0)
+                    setpomodoroSettings({ ...pomodoroSettings, pomodoro: { ...pomodoroSettings.pomodoro, currentValue: pomodoroSettings.pomodoro.currentValue - 1 } })
+                else if (pomodoroSettings.currentTab === 1)
+                    setpomodoroSettings({ ...pomodoroSettings, shortBreak: { ...pomodoroSettings.shortBreak, currentValue: pomodoroSettings.shortBreak.currentValue - 1 } })
+                else if (pomodoroSettings.currentTab === 2)
+                    setpomodoroSettings({ ...pomodoroSettings, longBreak: { ...pomodoroSettings.longBreak, currentValue: pomodoroSettings.longBreak.currentValue - 1 } })
+            }, 1000);
+
+            return () => {
+                clearInterval(interval);
+            }
+        }
+    }, [start, pomodoroSettings])
 
     return (
         <Container maxWidth="xl" className={classes.root}>
@@ -91,18 +115,18 @@ function App(props) {
                         <CheckCircleIcon />
                         <Typography variant="h6">Pomofocus</Typography>
                     </div>
-                    <Settings pomodoroOptions={pomodoroOptions} setPomodoroOptions={setPomodoroOptions} />
+                    <Settings pomodoroSettings={pomodoroSettings} setpomodoroSettings={setpomodoroSettings} />
                 </Container>
                 <Paper className={classes.paper} elevation={0}>
-                    <Tabs value={currentTab} centered onChange={handleChange} aria-label="Pomodoro tabs" TabIndicatorProps={{ style: { display: "none" } }}>
+                    <Tabs value={pomodoroSettings.currentTab} centered onChange={handleChange} aria-label="Pomodoro tabs" TabIndicatorProps={{ style: { display: "none" } }}>
                         <Tab label="Pomodoro" id='tab-0' aria-controls='tabpanel-0' />
                         <Tab label="Short Break" id='tab-1' aria-controls='tabpanel-1' />
                         <Tab label="Long Break" id='tab-2' aria-controls='tabpanel-2' />
                     </Tabs>
-                    <TabPanel currentTab={currentTab} index={0} timer={pomodoroOptions.pomodoro}>test</TabPanel>
-                    <TabPanel currentTab={currentTab} index={1} timer={pomodoroOptions.shortBreak}>toast</TabPanel>
-                    <TabPanel currentTab={currentTab} index={2} timer={pomodoroOptions.longBreak}>toasiteizt</TabPanel>
-                    <Button variant="contained" className={classes.startButton} disableElevation onClick={handleStartStop}>Start</Button>
+                    <TabPanel currentTab={pomodoroSettings.currentTab} index={0} timer={pomodoroSettings.pomodoro.currentValue} />
+                    <TabPanel currentTab={pomodoroSettings.currentTab} index={1} timer={pomodoroSettings.shortBreak.currentValue} />
+                    <TabPanel currentTab={pomodoroSettings.currentTab} index={2} timer={pomodoroSettings.longBreak.currentValue} />
+                    <Button variant="contained" className={classes.startButton} disableElevation onClick={handleStartStop}>{start ? 'Stop' : 'Start'}</Button>
                 </Paper>
                 <Task />
             </Container >
