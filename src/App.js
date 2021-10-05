@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 function App(props) {
-    const [value, setValue] = useState(0);
+    const [currentTab, setCurrentTab] = useState(0);
     const classes = useStyles();
     const [pomodoroOptions, setPomodoroOptions] = useState({
         pomodoro: 1500,
@@ -76,7 +76,11 @@ function App(props) {
     });
 
     const handleChange = (e, newValue) => {
-        setValue(newValue)
+        setCurrentTab(newValue)
+    }
+
+    const handleStartStop = () => {
+
     }
 
     return (
@@ -90,15 +94,15 @@ function App(props) {
                     <Settings pomodoroOptions={pomodoroOptions} setPomodoroOptions={setPomodoroOptions} />
                 </Container>
                 <Paper className={classes.paper} elevation={0}>
-                    <Tabs value={value} centered onChange={handleChange} aria-label="Pomodoro tabs" TabIndicatorProps={{ style: { display: "none" } }}>
+                    <Tabs value={currentTab} centered onChange={handleChange} aria-label="Pomodoro tabs" TabIndicatorProps={{ style: { display: "none" } }}>
                         <Tab label="Pomodoro" id='tab-0' aria-controls='tabpanel-0' />
                         <Tab label="Short Break" id='tab-1' aria-controls='tabpanel-1' />
                         <Tab label="Long Break" id='tab-2' aria-controls='tabpanel-2' />
                     </Tabs>
-                    <TabPanel value={value} index={0} timer={pomodoroOptions.pomodoro}>test</TabPanel>
-                    <TabPanel value={value} index={1} timer={pomodoroOptions.shortBreak}>toast</TabPanel>
-                    <TabPanel value={value} index={2} timer={pomodoroOptions.longBreak}>toasiteizt</TabPanel>
-                    <Button variant="contained" className={classes.startButton} disableElevation>Start</Button>
+                    <TabPanel currentTab={currentTab} index={0} timer={pomodoroOptions.pomodoro}>test</TabPanel>
+                    <TabPanel currentTab={currentTab} index={1} timer={pomodoroOptions.shortBreak}>toast</TabPanel>
+                    <TabPanel currentTab={currentTab} index={2} timer={pomodoroOptions.longBreak}>toasiteizt</TabPanel>
+                    <Button variant="contained" className={classes.startButton} disableElevation onClick={handleStartStop}>Start</Button>
                 </Paper>
                 <Task />
             </Container >
