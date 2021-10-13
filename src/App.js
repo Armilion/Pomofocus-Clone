@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff"
     },
     subRoot: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
         maxWidth: "600px"
     },
     appBar: {
@@ -47,26 +44,32 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        maxWidth: "480px",
         padding: "20px",
         margin: "20px",
-        backgroundColor: "rgba(255,255,200,0.2) !important",
-        color: "white !important"
+        backgroundColor: "rgba(255,255,200,0.2)",
+        color: "white"
     },
     startButton: {
-        fontSize: "22px !important",
-        backgroundColor: "white !important",
-        boxShadow: "0px 5px 0px 0px rgb(235,235,235) !important",
-        color:`${theme.palette.primary.main} !important`
+        width: "200px",
+        fontSize: "22px",
+        backgroundColor: "white",
+        boxShadow: theme.shadows[25],
+        color: `${theme.palette.primary.main}`,
+        '&:hover': {
+            backgroundColor: "white",
+            boxShadow: theme.shadows[25]
+        }
     },
     tabs: {
-        borderRadius: "5px !important",
-        padding: "7px !important",
-        minHeight: "unset !important"
+        borderRadius: "5px",
+        padding: "7px",
+        minHeight: "unset"
     },
     tabContainer: {
         width: "100%",
         '& .css-1wf8b0h-MuiTabs-flexContainer': {
-            justifyContent: "space-evenly !important"
+            justifyContent: "space-evenly"
         }
     }
 }));
@@ -115,6 +118,7 @@ function App() {
 
     const handleStartStop = () => {
         setstart(!start);
+        context.setShadows(start);
     }
 
     const tabProps = (index) => ({
