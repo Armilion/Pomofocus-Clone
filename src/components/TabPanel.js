@@ -7,7 +7,7 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
     timeContainer : {
-        margin:"20px"
+        marginBottom: "20px"
     }
 })
 

@@ -23,11 +23,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: "flex",
         justifyContent: "center",
         backgroundColor: theme.palette.primary.main,
         transition: theme.transitions.create(['background-color', 'transform'], { duration: 1000 }),
-        height: "100vh",
+        maxWidth:"unset",
+        height:"100vh",
         color: "#fff",
         '& button' : {
             textTransform:'capitalize'
@@ -69,12 +69,13 @@ const useStyles = makeStyles((theme) => ({
     tabs: {
         borderRadius: "5px",
         padding: "7px",
-        minHeight: "unset"
+        minHeight: "unset",
+        margin:"0 10px 0 10px"
     },
     tabContainer: {
         width: "100%",
         '& .css-1wf8b0h-MuiTabs-flexContainer': {
-            justifyContent: "space-evenly"
+            justifyContent: "center"
         }
     }
 }));
@@ -164,7 +165,7 @@ function App() {
                         <Settings pomodoroSettings={pomodoroSettings} setpomodoroSettings={setpomodoroSettings} />
                     </Container>
                     <Paper className={classes.paper} elevation={0}>
-                        <Tabs value={pomodoroSettings.currentTab} className={classes.tabContainer} centered onChange={handleChange} aria-label="Pomodoro tabs" textColor="white" TabIndicatorProps={{ style: { display: "none" } }}>
+                        <Tabs value={pomodoroSettings.currentTab} className={classes.tabContainer} centered onChange={handleChange} aria-label="Pomodoro tabs" textColor="inherit" TabIndicatorProps={{ style: { display: "none" } }}>
                             <Tab className={classes.tabs} label="Pomodoro " {...tabProps(0)} />
                             <Tab className={classes.tabs} label="Short Break" {...tabProps(1)} />
                             <Tab className={classes.tabs} label="Long Break" {...tabProps(2)} />
