@@ -19,7 +19,7 @@ import longBreakTheme from './themes/longBreakTheme';
 import { useState, useEffect, useContext } from 'react';
 
 //Icons
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,13 +28,16 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.main,
         transition: theme.transitions.create(['background-color', 'transform'], { duration: 1000 }),
         height: "100vh",
-        color: "#fff"
+        color: "#fff",
+        '& button' : {
+            textTransform:'capitalize'
+        }
     },
     subRoot: {
         maxWidth: "600px"
     },
     appBar: {
-        display: "flex !important",
+        display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         padding: "10px",
@@ -51,6 +54,8 @@ const useStyles = makeStyles((theme) => ({
         color: "white"
     },
     startButton: {
+        textTransform:'uppercase !important',
+        fontWeigh:'bold',
         width: "200px",
         fontSize: "22px",
         backgroundColor: "white",
