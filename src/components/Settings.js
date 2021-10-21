@@ -72,7 +72,7 @@ export default function Settings(props) {
                                 <Typography variant="body1">Time</Typography>
                             </Grid>
                             <Grid item xs={4}>
-                                <TextField size="small" type="number" label="Pomodoro" value={Math.floor(pomodoro.initValue / 60)} variant="outlined" onChange={(e) => setpomodoroSettings({...props.pomodoroSettings, pomodoro : e.target.value >= 5? {initValue : e.target.value * 60, currentValue : e.target.value * 60} : pomodoro})} />
+                                <TextField size="small" type="number" label="Pomodoro" value={Math.floor(pomodoro.initValue / 60)} variant="outlined" onChange={(e) => setpomodoroSettings({...props.pomodoroSettings, pomodoro : e.target.value >= 1? {initValue : e.target.value * 60, currentValue : e.target.value * 60} : pomodoro})} />
                             </Grid>
                             <Grid item xs={4}>
                                 <TextField size="small" type="number" label="Short break" value={Math.floor(shortBreak.initValue / 60)} variant="outlined" onChange={(e) => setpomodoroSettings({...props.pomodoroSettings, shortBreak : e.target.value >= 1? {initValue : e.target.value * 60, currentValue : e.target.value * 60} : shortBreak})} />
@@ -111,7 +111,7 @@ export default function Settings(props) {
                                 <Typography variant="body1">Long break interval</Typography>
                             </Grid>
                             <Grid item xs={3}>
-                                <TextField type="number" size="small" variant="outlined" value={longBreakInterval} onChange={(e) => setpomodoroSettings({...props.pomodoroSettings, longBreakInterval : e.target.value >= 1? e.target.value : longBreakInterval})} />
+                                <TextField type="number" size="small" variant="outlined" value={longBreakInterval.initValue} onChange={(e) => setpomodoroSettings({...props.pomodoroSettings, longBreakInterval : e.target.value >= 1? {initValue : parseInt(e.target.value), currentValue : parseInt(e.target.value)} : longBreakInterval})} />
                             </Grid>
                             <Grid item xs={12}>
                                 <Divider />

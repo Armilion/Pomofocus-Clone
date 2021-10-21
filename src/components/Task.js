@@ -45,8 +45,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Task() {
     const [anchorEl, setAnchorEl] = useState(null)
+    const [tasks, setTasks] = useState([]);
     const classes = useStyles();
-    const [tasks, setTasks] = useState([])
+
 
     const handleOpenMenu = (e) => {
         setAnchorEl(e.currentTarget)
@@ -57,7 +58,7 @@ function Task() {
     }
 
     const addTask = () => {
-        setTasks([...tasks, { taskName: "", taskPomodoros: 0, taskNotes: "" }])
+        setTasks([...tasks, { taskName: "", taskPomodoros: 0, completedPomodoros: 0, taskNotes: "" }])
     }
 
     const deleteAllTasks = () => {
@@ -94,18 +95,18 @@ function Task() {
                     <Divider className={classes.divider} />
                 </Grid>
             </Grid>
+            {
+                tasks.map((task, index) => (
+                    <Grid key={index} item xs={12}>
+                        <SingleTask tasks={tasks} taskIndex={index} setTasks={setTasks} card={true} />
+                    </Grid>
+                ))
+            }
             <Grid item xs={12} className={classes.addTask}>
                 <Button variant="outlined" disableElevation className={classes.addTaskContainer} size="small" startIcon={<AddCircleIcon />} onClick={addTask}>
                     Add Task
                 </Button>
             </Grid>
-            {
-                tasks.map((task,index) => (
-                    <Grid key={index} item xs={12}>
-                        <SingleTask tasks={tasks} taskIndex={index} setTasks={setTasks} card={true}/>
-                    </Grid>
-                ))
-            }
         </Grid>
     )
 }

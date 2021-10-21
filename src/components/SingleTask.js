@@ -18,17 +18,19 @@ const useStyles = makeStyles({
         width: "100%"
     },
     paperHeaderContainer: {
-        display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
-        height: "60px",
-        paddingLeft: "16px",
-        paddingRight: "16px"
+        justifyContent: "center",
+        padding:"0 16px 16px 16px"
     },
     paperTitle: {
         display: "flex",
         alignItems: "center",
         padding: 0
+    },
+    paperSettings: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "end"
     },
     taskMoreOverButton: {
         border: "1px solid rgb(223, 223, 223)",
@@ -105,7 +107,25 @@ const useStyles = makeStyles({
     numberPomodoros: {
         width: "75px",
         backgroundColor: "rgb(239,239,239)",
-        outline:"0px none transparent"
+        outline: "0px none transparent"
+    },
+    buttonCircleIcon: {
+        '&:hover': {
+            backgroundColor: "transparent"
+        },
+        '& svg': {
+            color: "rgb(223,223,223)",
+            fontSize: "2rem",
+            '&:hover': {
+                color: 'rgb(239,239,239)'
+            }
+        }
+    },
+    paperNotes: {
+        padding: "10px",
+        backgroundColor: "rgb(252,248,222)",
+        color: "rgb(95,85,21)",
+        boxShadow:"rgba(0, 0, 0, 0.1) 0px 1px 0px"
     }
 })
 
@@ -118,18 +138,27 @@ function SingleTask(props) {
 
     const taskHeader = (
         <Paper>
-            <Container className={classes.paperHeaderContainer}>
-                <Container className={classes.paperTitle}>
-                    <IconButton size="small">
-                        <CheckCircleIcon />
-                    </IconButton>
-                    <Typography variant="body1">{task.taskName}</Typography>
-                    <Typography variant="body1">{task.taskPomodoros}</Typography>
-                </Container>
-                <IconButton className={classes.taskMoreOverButton} onClick={() => setIsCard(true)} size="small">
-                    <MoreVertIcon />
-                </IconButton>
-            </Container>
+            <Grid container className={classes.paperHeaderContainer} spacing={2}>
+                <Grid item container justifyContent="space-between">
+                    <Grid item className={classes.paperTitle}>
+                        <IconButton size="small" className={classes.buttonCircleIcon}>
+                            <CheckCircleIcon />
+                        </IconButton>
+                        <Typography variant="body1">{task.taskName}</Typography>
+                    </Grid>
+                    <Grid item className={classes.paperSettings}>
+                        <Typography variant="h6" style={{ marginRight: "10px", color: "rgb(160,160,160)" }}>{`${task.completedPomodoros} / ${task.taskPomodoros}`}</Typography>
+                        <IconButton className={classes.taskMoreOverButton} onClick={() => setIsCard(true)} size="small">
+                            <MoreVertIcon />
+                        </IconButton>
+                    </Grid>
+                </Grid>
+                {task.taskNotes !== "" && (<Grid item xs={11}>
+                    <Paper elevation={0} className={classes.paperNotes}>
+                        <Typography variant="body1">{task.taskNotes}</Typography>
+                    </Paper>
+                </Grid>)}
+            </Grid>
         </Paper>
     )
 
@@ -184,7 +213,7 @@ function SingleTask(props) {
                                 setTask(tasks[taskIndex]);
                         }
                         }>Cancel</Button>
-                        <Button variant="contained" disableElevation disabled={task.taskName === ""} className={classes.saveButton} onClick={() => {
+                        <Button variant="contained" disableElevation disabled={task.taskName === "" || task.taskPomodoros === 0} className={classes.saveButton} onClick={() => {
                             tasks[taskIndex] = task;
                             setTasks(tasks);
                             setIsCard(false);
