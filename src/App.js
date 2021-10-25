@@ -6,7 +6,7 @@ import { Button, Tab, Tabs, Typography, Paper, Container, Grid } from '@mui/mate
 import { makeStyles, ThemeProvider, useTheme } from '@mui/styles'
 
 // Local imports 
-import Task from "./components/Task";
+import Tasks from "./components/Tasks";
 import Settings from "./components/Settings";
 import TabPanel from './components/TabPanel';
 import { CustomThemeContext } from './themes/CustomThemeProvider';
@@ -111,13 +111,6 @@ function App() {
     const audioRef = useRef();
 
     const playAudio = () => {
-        const ref = audioRef.current;
-        ref.src = audioURLs[parseInt(pomodoroSettings.alarmSoundIndex)];
-        ref.play();
-        setTimeout(() => {
-            ref.pause();
-            ref.currentTime = 0;
-        }, 10000);
 
     }
 
@@ -147,7 +140,8 @@ function App() {
             let interval = setInterval(() => {
                 if (pomodoroSettings.timer === 0) {
                     setAppBarTimerWidth(0);
-                    handleStartStop();
+                    setstart(!start);
+                    context.setShadows(start);
                     if (pomodoroSettings.currentTab === 0) {
                         if (pomodoroSettings.longBreakInterval.currentValue === 1) {
                             setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timers[2], currentTab: 2, longBreakInterval: { ...pomodoroSettings.longBreakInterval, currentValue: pomodoroSettings.longBreakInterval.initValue } })
@@ -160,65 +154,24 @@ function App() {
                         setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timers[0], currentTab: 0 })
                         context.setTheme(0);
                     }
-                    playAudio();
+                    const ref = audioRef.current;
+                    ref.src = audioURLs[parseInt(pomodoroSettings.alarmSoundIndex)];
+                    ref.play();
+                    setTimeout(() => {
+                        ref.pause();
+                        ref.currentTime = 0;
+                    }, 10000);
                 } else {
                     setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timer - 1 })
                     setAppBarTimerWidth(100 - ((pomodoroSettings.timer - 1) / pomodoroSettings.timers[pomodoroSettings.currentTab]) * 100);
                 }
-
-                /* handleStartStop();
-            } else {
-                setpomodoroSettings({ ...pomodoroSettings, pomodoro: { ...pomodoroSettings.pomodoro, currentValue: pomodoroSettings.pomodoro.currentValue - 1
-            } })
-    setAppBarTimerWidth(100 - ((pomodoroSettings.pomodoro.currentValue - 1) / pomodoroSettings.pomodoro.initValue) * 100);
-}
-
-if (pomodoroSettings.currentTab === 0) {
-    if (pomodoroSettings.pomodoro.currentValue === 0) {
-        setAppBarTimerWidth(0);
-        playAudio(pomodoroSettings.alarmSoundIndex);
-        if (pomodoroSettings.longBreakInterval.currentValue === 1) {
-            setpomodoroSettings({ ...pomodoroSettings, pomodoro: { initValue: pomodoroSettings.pomodoro.initValue, currentValue: pomodoroSettings.pomodoro.initValue }, currentTab: 2 })
-            context.setTheme(2);
-        } else {
-            setpomodoroSettings({ ...pomodoroSettings, pomodoro: { initValue: pomodoroSettings.pomodoro.initValue, currentValue: pomodoroSettings.pomodoro.initValue }, longBreakInterval: { ...pomodoroSettings.longBreakInterval, currentValue: pomodoroSettings.longBreakInterval.currentValue - 1 }, currentTab: 1 })
-            context.setTheme(1);
-        }
-        handleStartStop();
-    } else {
-        setpomodoroSettings({ ...pomodoroSettings, pomodoro: { ...pomodoroSettings.pomodoro, currentValue: pomodoroSettings.pomodoro.currentValue - 1 } })
-        setAppBarTimerWidth(100 - ((pomodoroSettings.pomodoro.currentValue - 1) / pomodoroSettings.pomodoro.initValue) * 100);
-    }
-} else if (pomodoroSettings.currentTab === 1) {
-    if (pomodoroSettings.shortBreak.currentValue === 0) {
-        playAudio(pomodoroSettings.alarmSoundIndex);
-        setAppBarTimerWidth(0);
-        setpomodoroSettings({ ...pomodoroSettings, shortBreak: { initValue: pomodoroSettings.shortBreak.initValue, currentValue: pomodoroSettings.shortBreak.initValue }, currentTab: 0 })
-        context.setTheme(0);
-        handleStartStop();
-    } else {
-        setpomodoroSettings({ ...pomodoroSettings, shortBreak: { ...pomodoroSettings.shortBreak, currentValue: pomodoroSettings.shortBreak.currentValue - 1 } })
-        setAppBarTimerWidth(100 - ((pomodoroSettings.shortBreak.currentValue - 1) / pomodoroSettings.shortBreak.initValue) * 100);
-    }
-} else if (pomodoroSettings.currentTab === 2) {
-    if (pomodoroSettings.longBreak.currentValue === 0) {
-        playAudio(pomodoroSettings.alarmSoundIndex);
-        setAppBarTimerWidth(0);
-        setpomodoroSettings({ ...pomodoroSettings, longBreak: { initValue: pomodoroSettings.longBreak.initValue, currentValue: pomodoroSettings.longBreak.initValue }, longBreakInterval: { initValue: pomodoroSettings.longBreakInterval.initValue, currentValue: pomodoroSettings.longBreakInterval.initValue }, currentTab: 0 })
-        context.setTheme(0);
-        handleStartStop();
-    } else {
-        setpomodoroSettings({ ...pomodoroSettings, longBreak: { ...pomodoroSettings.longBreak, currentValue: pomodoroSettings.longBreak.currentValue - 1 } })
-        setAppBarTimerWidth(100 - ((pomodoroSettings.longBreak.currentValue - 1) / pomodoroSettings.longBreak.initValue) * 100);
-    } 
-}*/
             }, 50);
 
             return () => {
                 clearInterval(interval);
             }
         }
-    }, [start, pomodoroSettings])
+    }, [start, pomodoroSettings, context])
 
     return (
         <ThemeProvider theme={themes[pomodoroSettings.currentTab]}>
@@ -250,7 +203,7 @@ if (pomodoroSettings.currentTab === 0) {
                         }
                         <Button variant="contained" className={classes.startButton} disableElevation onClick={handleStartStop}>{start ? 'Stop' : 'Start'}</Button>
                     </Paper>
-                    <Task timer={pomodoroSettings.timer} />
+                    <Tasks timer={pomodoroSettings.timer} currentTab={pomodoroSettings.currentTab} />
                 </Container >
             </Container >
         </ThemeProvider>

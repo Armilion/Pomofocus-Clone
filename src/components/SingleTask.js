@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     paperHeaderContainer: {
         alignItems: "center",
         justifyContent: "center",
-        padding:"0 16px 16px 16px"
+        padding: "16px 16px 16px 16px"
     },
     paperTitle: {
         display: "flex",
@@ -124,12 +124,12 @@ const useStyles = makeStyles({
         padding: "10px",
         backgroundColor: "rgb(252,248,222)",
         color: "rgb(95,85,21)",
-        boxShadow:"rgba(0, 0, 0, 0.1) 0px 1px 0px"
+        boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 0px"
     }
 })
 
 function SingleTask(props) {
-    const { tasks, taskIndex, setTasks, card, timer } = props;
+    const { tasks, taskIndex, setTasks, card } = props;
     const classes = useStyles();
     const [clicked, setClicked] = useState(false);
     const [task, setTask] = useState(tasks[taskIndex]);
@@ -137,7 +137,7 @@ function SingleTask(props) {
 
     const taskHeader = (
         <Paper>
-            <Grid container className={classes.paperHeaderContainer} spacing={2}>
+            <Grid container className={classes.paperHeaderContainer} >
                 <Grid item container justifyContent="space-between">
                     <Grid item className={classes.paperTitle}>
                         <IconButton size="small" className={classes.buttonCircleIcon}>
@@ -153,9 +153,11 @@ function SingleTask(props) {
                     </Grid>
                 </Grid>
                 {task.taskNotes !== "" && (<Grid item xs={11}>
-                    <Paper elevation={0} className={classes.paperNotes}>
-                        <Typography variant="body1">{task.taskNotes}</Typography>
-                    </Paper>
+                    <Grid item>
+                        <Paper elevation={0} className={classes.paperNotes}>
+                            <Typography variant="body1">{task.taskNotes}</Typography>
+                        </Paper>
+                    </Grid>
                 </Grid>)}
             </Grid>
         </Paper>
