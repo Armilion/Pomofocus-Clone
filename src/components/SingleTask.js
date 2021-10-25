@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 //MUI
-import { Card, CardActions, CardContent, IconButton, Container, Paper, TextField, Button, Grid, TextareaAutosize } from '@mui/material';
+import { Card, CardActions, CardContent, IconButton, Paper, TextField, Button, Grid, TextareaAutosize } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 //Icons
@@ -9,7 +9,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Typography } from '@material-ui/core';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 
 
@@ -130,7 +129,7 @@ const useStyles = makeStyles({
 })
 
 function SingleTask(props) {
-    const { tasks, taskIndex, setTasks, card } = props;
+    const { tasks, taskIndex, setTasks, card, timer } = props;
     const classes = useStyles();
     const [clicked, setClicked] = useState(false);
     const [task, setTask] = useState(tasks[taskIndex]);

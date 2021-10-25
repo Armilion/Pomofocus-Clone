@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Typography, Grid, Divider, IconButton, Menu, MenuItem, Container, Button } from '@mui/material';
+import { Typography, Grid, Divider, IconButton, Menu, MenuItem, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 //Icons 
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-function Task() {
+function Task(props) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [tasks, setTasks] = useState([]);
     const classes = useStyles();
@@ -98,7 +98,7 @@ function Task() {
             {
                 tasks.map((task, index) => (
                     <Grid key={index} item xs={12}>
-                        <SingleTask tasks={tasks} taskIndex={index} setTasks={setTasks} card={true} />
+                        <SingleTask timer={props.timer} tasks={tasks} taskIndex={index} setTasks={setTasks} card={true} />
                     </Grid>
                 ))
             }
