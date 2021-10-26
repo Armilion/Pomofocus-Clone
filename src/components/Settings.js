@@ -96,15 +96,6 @@ export default function Settings(props) {
                                     </Grid>
                                 ))
                             }
-                            {/* <Grid item xs={4}>
-                                <TextField size="small" type="number" label="Pomodoro" value={Math.floor(pomodoro.initValue / 60)} variant="outlined" onChange={(e) => { let tmpTimers = [...pomodoroSettings.timers]; tmpTimers[0] = e.target.value >= 1 ? e.target.value * 60 : tmpTimers[0]; setpomodoroSettings({ ...props.pomodoroSettings, timers: tmpTimers }) }} />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <TextField size="small" type="number" label="Short break" value={Math.floor(shortBreak.initValue / 60)} variant="outlined" onChange={(e) => setpomodoroSettings({ ...props.pomodoroSettings, shortBreak: e.target.value >= 1 ? { initValue: e.target.value * 60, currentValue: e.target.value * 60 } : shortBreak })} />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <TextField size="small" type="number" label="Long Break" value={Math.floor(longBreak.initValue / 60)} variant="outlined" onChange={(e) => setpomodoroSettings({ ...props.pomodoroSettings, longBreak: e.target.value >= 1 ? { initValue: e.target.value * 60, currentValue: e.target.value * 60 } : longBreak })} />
-                            </Grid> */}
                             <Grid item xs={12}>
                                 <Divider />
                             </Grid>

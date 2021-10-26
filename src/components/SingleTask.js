@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //MUI
 import { Card, CardActions, CardContent, IconButton, Paper, TextField, Button, Grid, TextareaAutosize } from '@mui/material';
@@ -17,9 +17,17 @@ const useStyles = makeStyles({
         width: "100%"
     },
     paperHeaderContainer: {
+        borderLeft: "6px solid transparent",
+        '&:hover': {
+            borderLeft: "6px solid rgb(223,223,223)",
+            borderRadius: "4px"
+        }
+    },
+    gridHeaderContainer: {
         alignItems: "center",
         justifyContent: "center",
-        padding: "16px 16px 16px 16px"
+        padding: "16px 16px 16px 16px",
+        cursor: "pointer",
     },
     paperTitle: {
         display: "flex",
@@ -113,11 +121,10 @@ const useStyles = makeStyles({
             backgroundColor: "transparent"
         },
         '& svg': {
-            color: "rgb(223,223,223)",
             fontSize: "2rem",
             '&:hover': {
-                color: 'rgb(239,239,239)'
-            }
+                opacity: 0.6
+            },
         }
     },
     paperNotes: {
@@ -129,25 +136,47 @@ const useStyles = makeStyles({
 })
 
 function SingleTask(props) {
-    const { tasks, taskIndex, setTasks, card } = props;
+    const { tasks, taskIndex, setTasks, focusedTask, setFocusedTask, card } = props;
     const classes = useStyles();
     const [clicked, setClicked] = useState(false);
     const [task, setTask] = useState(tasks[taskIndex]);
     const [isCard, setIsCard] = useState(card);
 
+    useEffect(() => { // Updating task to the value of the tasks[taskIndex] if it has been modified. Important to update it in useEffect (and not just initialize it with taks[taskIndex] in useState without useEffect because task will not update to the new value in that case).
+        setTask(tasks[taskIndex])
+    }, [tasks, taskIndex])
+
+    const completeTask = (e) => {
+        e.stopPropagation();
+        const tmpTask = { ...task, completed: !task.completed };
+        setTask(tmpTask);
+
+        const tmpTasks = [...tasks];
+        tmpTasks[taskIndex] = tmpTask;
+        setTasks(tmpTasks);
+
+        if (focusedTask === taskIndex && tmpTask.completed === true) {
+            let newFocused = tmpTasks.findIndex((oneTask) => oneTask.completed === false );
+            if (newFocused !== -1)
+                setFocusedTask(newFocused)
+            else
+                setFocusedTask(-1);
+        }
+    }
+
     const taskHeader = (
-        <Paper>
-            <Grid container className={classes.paperHeaderContainer} >
+        <Paper onClick={() => setFocusedTask(taskIndex)} className={classes.paperHeaderContainer} style={focusedTask === taskIndex ? { borderLeft: "6px solid black" } : {} }>
+            <Grid container className={classes.gridHeaderContainer} >
                 <Grid item container justifyContent="space-between">
                     <Grid item className={classes.paperTitle}>
-                        <IconButton size="small" className={classes.buttonCircleIcon}>
-                            <CheckCircleIcon />
+                        <IconButton size="small" className={classes.buttonCircleIcon} onClick={completeTask}>
+                            <CheckCircleIcon style={{ color: task.completed ? "rgb(217,85,80)" : "rgb(223,223,223)" }} />
                         </IconButton>
-                        <Typography variant="body1">{task.taskName}</Typography>
+                        <Typography variant="body1" style={{ textDecoration: task.completed ? "line-through" : "unset" }}>{task.taskName}</Typography>
                     </Grid>
                     <Grid item className={classes.paperSettings}>
                         <Typography variant="h6" style={{ marginRight: "10px", color: "rgb(160,160,160)" }}>{`${task.completedPomodoros} / ${task.taskPomodoros}`}</Typography>
-                        <IconButton className={classes.taskMoreOverButton} onClick={() => setIsCard(true)} size="small">
+                        <IconButton className={classes.taskMoreOverButton} onClick={(e) => { e.stopPropagation(); setIsCard(true) }} size="small">
                             <MoreVertIcon />
                         </IconButton>
                     </Grid>
@@ -160,9 +189,8 @@ function SingleTask(props) {
                     </Grid>
                 </Grid>)}
             </Grid>
-        </Paper>
+        </Paper >
     )
-
 
     const taskSettings = (
         <Card>
@@ -227,18 +255,5 @@ function SingleTask(props) {
 
     return isCard ? taskSettings : taskHeader;
 }
-
-/* <Card className={classes.card}>
-            <CardHeader action={
-            }
-            
-            title={
-            
-        }>
-            </CardHeader>
-           <CardContent>
-
-            </CardContent> 
-        </Card > */
 
 export default SingleTask

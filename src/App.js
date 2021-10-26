@@ -197,7 +197,7 @@ function App() {
                             <Tab className={classes.tabs} label="Long Break" {...tabProps(2)} />
                         </Tabs>
                         {
-                            pomodoroSettings.timers.map((oneTimer, i) => (
+                            pomodoroSettings.timers.map((_, i) => (
                                 <TabPanel key={i} currentTab={pomodoroSettings.currentTab} index={i} timer={pomodoroSettings.timer} />
                             ))
                         }
