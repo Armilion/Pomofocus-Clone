@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
         margin: "auto",
         backgroundColor: "rgba(255,255,200,0.2)",
         color: "white",
-        borderRadius:"7px"
+        borderRadius: "7px"
     },
     startButton: {
         textTransform: 'uppercase !important',
@@ -103,15 +103,13 @@ function App() {
         },
         alarmSoundIndex: "0",
         alarmVolume: 0.5,
-        alarmRepeat: 4,
+        alarmRepeat: 1,
         tickingSound: "none",
         tickingVolume: 50
     });
     const [pomodoroCounter, setPomodoroCounter] = useState(0);
     const [appBarTimerWidth, setAppBarTimerWidth] = useState(0);
     const audioRef = useRef();
-
-    //console.log(pomodoroSettings.longBreakInterval);
 
     const handleChange = (e, newValue) => {
         setpomodoroSettings({ ...pomodoroSettings, currentTab: newValue, timer: pomodoroSettings.timers[newValue] })
@@ -134,6 +132,17 @@ function App() {
         }
     });
 
+    const playAudio = (ref) => {
+        ref.src = audioURLs[parseInt(pomodoroSettings.alarmSoundIndex)];
+        ref.loop = true;
+        ref.play();
+        setTimeout(() => {
+            ref.pause();
+            ref.currentTime = 0;
+            ref.loop = false;
+        }, 10000 * pomodoroSettings.alarmRepeat);
+    }
+
     useEffect(() => {
         if (start) {
             let interval = setInterval(() => {
@@ -142,7 +151,7 @@ function App() {
                     setstart(!start);
                     context.setShadows(start);
                     if (pomodoroSettings.currentTab === 0) {
-                        setPomodoroCounter(pomodoroCounter+1);
+                        setPomodoroCounter(pomodoroCounter + 1);
                         if (pomodoroSettings.longBreakInterval.currentValue === 1) {
                             setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timers[2], currentTab: 2, longBreakInterval: { ...pomodoroSettings.longBreakInterval, currentValue: pomodoroSettings.longBreakInterval.initValue } })
                             context.setTheme(2);
@@ -154,13 +163,8 @@ function App() {
                         setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timers[0], currentTab: 0 })
                         context.setTheme(0);
                     }
-                    const ref = audioRef.current;
-                    ref.src = audioURLs[parseInt(pomodoroSettings.alarmSoundIndex)];
-                    ref.play();
-                    setTimeout(() => {
-                        ref.pause();
-                        ref.currentTime = 0;
-                    }, 10000);
+                    playAudio(audioRef.current);
+
                 } else {
                     setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timer - 1 })
                     setAppBarTimerWidth(100 - ((pomodoroSettings.timer - 1) / pomodoroSettings.timers[pomodoroSettings.currentTab]) * 100);
@@ -171,14 +175,14 @@ function App() {
                 clearInterval(interval);
             }
         }
-    }, [start, pomodoroSettings, context, pomodoroCounter])
+    }, [start, pomodoroSettings, context, pomodoroCounter]);
 
     return (
         <ThemeProvider theme={themes[pomodoroSettings.currentTab]}>
             <Container className={classes.root}>
                 <audio ref={audioRef} />
                 <Container className={classes.subRoot}>
-                    <Grid container justifyContent="center" style={{marginBottom:"30px"}}>
+                    <Grid container justifyContent="center" style={{ marginBottom: "30px" }}>
                         <Grid item container className={classes.appBar}>
                             <Grid item style={{ display: "flex" }}>
                                 <CheckCircleIcon />
@@ -203,7 +207,7 @@ function App() {
                         }
                         <Button variant="contained" className={classes.startButton} disableElevation onClick={handleStartStop}>{start ? 'Stop' : 'Start'}</Button>
                     </Paper>
-                    <Tasks timer={pomodoroSettings.timer} timers={pomodoroSettings.timers} longBreakInterval={pomodoroSettings.longBreakInterval} currentTab={pomodoroSettings.currentTab} pomodoroCounter={pomodoroCounter} setPomodoroCounter={setPomodoroCounter}/>
+                    <Tasks timer={pomodoroSettings.timer} timers={pomodoroSettings.timers} longBreakInterval={pomodoroSettings.longBreakInterval} currentTab={pomodoroSettings.currentTab} pomodoroCounter={pomodoroCounter} setPomodoroCounter={setPomodoroCounter} />
                 </Container >
             </Container >
         </ThemeProvider>
