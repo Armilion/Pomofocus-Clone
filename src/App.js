@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.main,
         transition: theme.transitions.create(['background-color', 'transform'], { duration: 1000 }),
         maxWidth: "unset",
-        height: "100vh",
+        minHeight: "100vh",
         color: "#fff",
         '& button': {
             textTransform: 'capitalize'
@@ -42,17 +42,18 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingTop: "10px",
-        paddingBottom: "10px",
+        paddingBottom: "10px"
     },
     paper: {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         maxWidth: "480px",
-        padding: "20px",
-        margin: "20px",
+        padding: "30px 0",
+        margin: "auto",
         backgroundColor: "rgba(255,255,200,0.2)",
-        color: "white"
+        color: "white",
+        borderRadius:"7px"
     },
     startButton: {
         textTransform: 'uppercase !important',
@@ -70,8 +71,7 @@ const useStyles = makeStyles((theme) => ({
     tabs: {
         borderRadius: "5px",
         padding: "7px",
-        minHeight: "unset",
-        margin: "0 10px 0 10px"
+        minHeight: "unset"
     },
     tabContainer: {
         width: "100%",
@@ -107,12 +107,11 @@ function App() {
         tickingSound: "none",
         tickingVolume: 50
     });
+    const [pomodoroCounter, setPomodoroCounter] = useState(0);
     const [appBarTimerWidth, setAppBarTimerWidth] = useState(0);
     const audioRef = useRef();
 
-    const playAudio = () => {
-
-    }
+    //console.log(pomodoroSettings.longBreakInterval);
 
     const handleChange = (e, newValue) => {
         setpomodoroSettings({ ...pomodoroSettings, currentTab: newValue, timer: pomodoroSettings.timers[newValue] })
@@ -143,6 +142,7 @@ function App() {
                     setstart(!start);
                     context.setShadows(start);
                     if (pomodoroSettings.currentTab === 0) {
+                        setPomodoroCounter(pomodoroCounter+1);
                         if (pomodoroSettings.longBreakInterval.currentValue === 1) {
                             setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timers[2], currentTab: 2, longBreakInterval: { ...pomodoroSettings.longBreakInterval, currentValue: pomodoroSettings.longBreakInterval.initValue } })
                             context.setTheme(2);
@@ -171,14 +171,14 @@ function App() {
                 clearInterval(interval);
             }
         }
-    }, [start, pomodoroSettings, context])
+    }, [start, pomodoroSettings, context, pomodoroCounter])
 
     return (
         <ThemeProvider theme={themes[pomodoroSettings.currentTab]}>
             <Container className={classes.root}>
                 <audio ref={audioRef} />
                 <Container className={classes.subRoot}>
-                    <Grid container justifyContent="center">
+                    <Grid container justifyContent="center" style={{marginBottom:"30px"}}>
                         <Grid item container className={classes.appBar}>
                             <Grid item style={{ display: "flex" }}>
                                 <CheckCircleIcon />
@@ -203,7 +203,7 @@ function App() {
                         }
                         <Button variant="contained" className={classes.startButton} disableElevation onClick={handleStartStop}>{start ? 'Stop' : 'Start'}</Button>
                     </Paper>
-                    <Tasks timer={pomodoroSettings.timer} currentTab={pomodoroSettings.currentTab} />
+                    <Tasks timer={pomodoroSettings.timer} timers={pomodoroSettings.timers} longBreakInterval={pomodoroSettings.longBreakInterval} currentTab={pomodoroSettings.currentTab} pomodoroCounter={pomodoroCounter} setPomodoroCounter={setPomodoroCounter}/>
                 </Container >
             </Container >
         </ThemeProvider>

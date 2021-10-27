@@ -11,7 +11,6 @@ import { Typography } from '@material-ui/core';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 
-
 const useStyles = makeStyles({
     card: {
         width: "100%"
@@ -26,7 +25,7 @@ const useStyles = makeStyles({
     gridHeaderContainer: {
         alignItems: "center",
         justifyContent: "center",
-        padding: "16px 16px 16px 16px",
+        padding: "10px",
         cursor: "pointer",
     },
     paperTitle: {
@@ -243,8 +242,9 @@ function SingleTask(props) {
                         }
                         }>Cancel</Button>
                         <Button variant="contained" disableElevation disabled={task.taskName === "" || task.taskPomodoros === 0} className={classes.saveButton} onClick={() => {
-                            tasks[taskIndex] = task;
-                            setTasks(tasks);
+                            const tmpTasks = [...tasks];
+                            tmpTasks[taskIndex] = task;
+                            setTasks(tmpTasks);
                             setIsCard(false);
                         }}>Save</Button>
                     </Grid>
