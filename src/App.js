@@ -11,10 +11,7 @@ import Settings from "./components/Settings";
 import TabPanel from './components/TabPanel';
 import { CustomThemeContext } from './themes/CustomThemeProvider';
 import audioURLs from './utils/audioURLs';
-
-import pomodoroTheme from './themes/pomodoroTheme';
-import shortBreakTheme from './themes/shortBreakTheme';
-import longBreakTheme from './themes/longBreakTheme';
+import styles from './themes/styles';
 
 //React
 import { useState, useEffect, useContext, useRef } from 'react';
@@ -22,70 +19,7 @@ import { useState, useEffect, useContext, useRef } from 'react';
 //Icons
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        justifyContent: "center",
-        backgroundColor: theme.palette.primary.main,
-        transition: theme.transitions.create(['background-color', 'transform'], { duration: 1000 }),
-        maxWidth: "unset",
-        minHeight: "100vh",
-        color: "#fff",
-        '& button': {
-            textTransform: 'capitalize'
-        }
-    },
-    subRoot: {
-        maxWidth: "600px"
-    },
-    appBar: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingTop: "10px",
-        paddingBottom: "10px"
-    },
-    paper: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        maxWidth: "480px",
-        padding: "30px 0",
-        margin: "auto",
-        backgroundColor: "rgba(255,255,200,0.2)",
-        color: "white",
-        borderRadius: "7px"
-    },
-    startButton: {
-        textTransform: 'uppercase !important',
-        fontWeigh: 'bold',
-        width: "200px",
-        fontSize: "22px",
-        backgroundColor: "white",
-        boxShadow: theme.shadows[25],
-        color: `${theme.palette.primary.main}`,
-        '&:hover': {
-            backgroundColor: "white",
-            boxShadow: theme.shadows[25]
-        }
-    },
-    tabs: {
-        borderRadius: "5px",
-        padding: "7px",
-        minHeight: "unset"
-    },
-    tabContainer: {
-        width: "100%",
-        '& .css-1wf8b0h-MuiTabs-flexContainer': {
-            justifyContent: "center"
-        }
-    }
-}));
-
-const themes = [
-    pomodoroTheme,
-    shortBreakTheme,
-    longBreakTheme
-];
+const useStyles = makeStyles((theme) => styles(theme));
 
 function App() {
     const theme = useTheme();
@@ -107,7 +41,7 @@ function App() {
         tickingSound: "none",
         tickingVolume: 50
     });
-    const [pomodoroCounter, setPomodoroCounter] = useState(0);
+    const [pomodoroCounter, setPomodoroCounter] = useState(1);
     const [appBarTimerWidth, setAppBarTimerWidth] = useState(0);
     const audioRef = useRef();
 
@@ -178,7 +112,6 @@ function App() {
     }, [start, pomodoroSettings, context, pomodoroCounter]);
 
     return (
-        <ThemeProvider theme={themes[pomodoroSettings.currentTab]}>
             <Container className={classes.root}>
                 <audio ref={audioRef} />
                 <Container className={classes.subRoot}>
@@ -194,7 +127,7 @@ function App() {
                             <div style={{ height: "3px", width: `${appBarTimerWidth}%`, backgroundColor: "white", borderRadius: "7px" }} />
                         </Grid>
                     </Grid>
-                    <Paper className={classes.paper} elevation={0}>
+                    <Paper className={classes.paperPomodoro} elevation={0}>
                         <Tabs value={pomodoroSettings.currentTab} className={classes.tabContainer} centered onChange={handleChange} aria-label="Pomodoro tabs" textColor="inherit" TabIndicatorProps={{ style: { display: "none" } }}>
                             <Tab className={classes.tabs} label="Pomodoro" {...tabProps(0)} />
                             <Tab className={classes.tabs} label="Short Break" {...tabProps(1)} />
@@ -209,8 +142,7 @@ function App() {
                     </Paper>
                     <Tasks timer={pomodoroSettings.timer} timers={pomodoroSettings.timers} longBreakInterval={pomodoroSettings.longBreakInterval} currentTab={pomodoroSettings.currentTab} pomodoroCounter={pomodoroCounter} setPomodoroCounter={setPomodoroCounter} />
                 </Container >
-            </Container >
-        </ThemeProvider>
+            </Container>
     );
 }
 

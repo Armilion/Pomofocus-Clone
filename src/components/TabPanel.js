@@ -5,13 +5,12 @@ import React from 'react';
 import { Container, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles({
-    timeContainer : {
-        marginBottom: "20px"
-    }
-})
+//Local imports
+import styles from '../themes/styles';
 
-export default function TabPanel(props) {
+const useStyles = makeStyles((theme) => styles(theme));
+
+function TabPanel(props) {
     const { currentTab, index, timer } = props;
     const classes = useStyles();
     return (
@@ -23,10 +22,12 @@ export default function TabPanel(props) {
         >
             {currentTab === index && (
                 <Container className={classes.timeContainer}>
-                    <Typography variant="h1">{`${Math.floor(timer / 60).toString().padStart(2, '0')}:${(timer % 60).toString().padStart(2, '0')}`}</Typography>
+                    <Typography className={classes.timerTypo} variant="h1">{`${Math.floor(timer / 60).toString().padStart(2, '0')}:${(timer % 60).toString().padStart(2, '0')}`}</Typography>
                 </Container>
             )}
 
         </div>
     )
 }
+
+export default TabPanel;

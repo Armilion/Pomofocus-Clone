@@ -1,138 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 
 //MUI
-import { Card, CardActions, CardContent, IconButton, Paper, TextField, Button, Grid, TextareaAutosize } from '@mui/material';
+import { Card, CardActions, CardContent, IconButton, Paper, TextField, Button, Grid, TextareaAutosize, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 //Icons
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Typography } from '@material-ui/core';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 
-const useStyles = makeStyles({
-    card: {
-        width: "100%"
-    },
-    paperHeaderContainer: {
-        borderLeft: "6px solid transparent",
-        '&:hover': {
-            borderLeft: "6px solid rgb(223,223,223)",
-            borderRadius: "4px"
-        }
-    },
-    gridHeaderContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "10px",
-        cursor: "pointer",
-    },
-    paperTitle: {
-        display: "flex",
-        alignItems: "center",
-        padding: 0
-    },
-    paperSettings: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "end"
-    },
-    taskMoreOverButton: {
-        border: "1px solid rgb(223, 223, 223)",
-        borderRadius: "5px",
-        "&:hover": {
-            backgroundColor: "rgb(223, 223, 223)"
-        }
-    },
-    addNote: {
-        textDecoration: "underline",
-        padding: 0,
-        fontSize: "0.75rem",
-        color: 'rgba(0,0,0,0.4)',
-        "&:hover": {
-            backgroundColor: "transparent",
-            textDecoration: "underline",
-            color: 'rgba(0,0,0,0.6)'
-        },
-    },
-    cardActions: {
-        backgroundColor: 'rgb(239, 239, 239)',
-        color: 'rgba(0,0,0,0.6)',
-        padding: "15px",
-        display: "flex",
-        justifyContent: "end",
-        '&:hover': {
-            color: 'rgba(0,0,0,0.8)'
-        }
-    },
-    saveButton: {
-        backgroundColor: "rgba(0,0,0,0.8)",
-        color: "rgba(255,255,255,0.8)",
-        '&:hover': {
-            backgroundColor: "rgba(0,0,0,1)",
-            color: "rgba(255,255,255,1)",
-        }
-    },
-    actionButtons: {
-        textTransform: 'capitalize',
-        fontWeight: 'bold',
-        backgroundColor: 'transparent',
-        color: 'rgb(136,136,136)',
-        '&:hover': {
-            backgroundColor: 'transparent',
-            color: 'rgb(120,120,120)',
-        }
-    },
-    textArea: {
-        border: "none",
-        backgroundColor: "rgb(239,239,239)",
-        padding: "10px",
-        color: "rgb(85,85,85)",
-        boxSizing: 'border-box',
-        outline: "unset",
-        width: "100%",
-        borderRadius: "5px",
-        fontSize: "12px",
-        '&:focus-visible': {
-            border: "none"
-        }
-    },
-    upAndDownIcons: {
-        backgroundColor: "#fff",
-        margin: "5px",
-        minWidth: "unset",
-        padding: "5px",
-        '&:hover': {
-            backgroundColor: "#fff"
-        },
-        '&:focus': {
-            backgroundColor: "#fff"
-        }
-    },
-    numberPomodoros: {
-        width: "75px",
-        backgroundColor: "rgb(239,239,239)",
-        outline: "0px none transparent"
-    },
-    buttonCircleIcon: {
-        '&:hover': {
-            backgroundColor: "transparent"
-        },
-        '& svg': {
-            fontSize: "2rem",
-            '&:hover': {
-                opacity: 0.6
-            },
-        }
-    },
-    paperNotes: {
-        padding: "10px",
-        backgroundColor: "rgb(252,248,222)",
-        color: "rgb(95,85,21)",
-        boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 0px"
-    }
-})
+//Local imports 
+import styles from '../themes/styles';
+
+const useStyles = makeStyles((theme) => styles(theme));
 
 function SingleTask(props) {
     const { tasks, taskIndex, setTasks, focusedTask, setFocusedTask, card } = props;
@@ -155,7 +36,7 @@ function SingleTask(props) {
         setTasks(tmpTasks);
 
         if (focusedTask === taskIndex && tmpTask.completed === true) {
-            let newFocused = tmpTasks.findIndex((oneTask) => oneTask.completed === false );
+            let newFocused = tmpTasks.findIndex((oneTask) => oneTask.completed === false);
             if (newFocused !== -1)
                 setFocusedTask(newFocused)
             else
@@ -164,7 +45,7 @@ function SingleTask(props) {
     }
 
     const taskHeader = (
-        <Paper onClick={() => setFocusedTask(taskIndex)} className={classes.paperHeaderContainer} style={focusedTask === taskIndex ? { borderLeft: "6px solid black" } : {} }>
+        <Paper onClick={() => setFocusedTask(taskIndex)} className={classes.paperHeaderContainer} style={focusedTask === taskIndex ? { borderLeft: "6px solid black" } : {}}>
             <Grid container className={classes.gridHeaderContainer} >
                 <Grid item container justifyContent="space-between">
                     <Grid item className={classes.paperTitle}>
@@ -253,7 +134,11 @@ function SingleTask(props) {
         </Card>
     )
 
-    return isCard ? taskSettings : taskHeader;
+    return (
+        <Fragment>
+            {isCard ? taskSettings : taskHeader}
+        </Fragment>
+    )
 }
 
 export default SingleTask

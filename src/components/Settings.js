@@ -11,33 +11,11 @@ import CloseIcon from '@material-ui/icons/Close';
 
 //Local
 import audioURLs from '../utils/audioURLs';
+import styles from '../themes/styles';
 
-const useStyles = makeStyles(() => ({
-    settingsButton: {
-        backgroundColor: "rgba(255,255,255,0.2)",
-        color: "#fff",
-        fontSize: "13px"
-    },
-    dialogPaper: {
-        maxHeight: "none",
-        maxWidth: "480px"
-    },
-    numberInputs: {
-        backgroundColor: "gray"
-    },
-    dialogContent: {
-        marginTop: "10px"
-    },
-    container: {
-        display: 'flex',
-        justifyContent: 'center'
-    },
-    gridContainer: {
-        paddingTop: "20px"
-    }
-}));
+const useStyles = makeStyles((theme) => styles(theme));
 
-export default function Settings(props) {
+function Settings(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const audioRef = useRef();
@@ -194,3 +172,5 @@ export default function Settings(props) {
         </Fragment>
     )
 }
+
+export default Settings;
