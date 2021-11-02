@@ -73,7 +73,7 @@ function SingleTask(props) {
     )
 
     const taskSettings = (
-        <Card>
+        <Card className={classes.cardTaskSettings}>
             <CardContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>

@@ -10,7 +10,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import CloseIcon from '@material-ui/icons/Close';
 
 //Local
-import audioURLs from '../utils/audioURLs';
+import audioURLs from '../utils/audioHandle';
+import { audioTicking, useAudio } from '../utils/audioHandle';
 import styles from '../themes/styles';
 
 const useStyles = makeStyles((theme) => styles(theme));
@@ -18,11 +19,14 @@ const useStyles = makeStyles((theme) => styles(theme));
 function Settings(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const audioRef = useRef();
+    const audioAlarmRef = useRef();
+    const audioTickingRef = useRef();
 
-    const { pomodoroSettings: { currentTab, timers, timer, autoStarts, longBreakInterval, alarmSoundIndex, alarmVolume, alarmRepeat, tickingSound, tickingVolume }, setpomodoroSettings } = props;
+    const { pomodoroSettings: { currentTab, timers, timer, autoStarts, longBreakInterval, alarmSoundIndex, alarmVolume, alarmRepeat, tickingSoundIndex, tickingVolume }, setpomodoroSettings } = props;
 
     const handleClose = () => {
+        audioAlarmRef.current.pause();
+        audioTickingRef.current.pause();
         setOpen(false);
     }
 
@@ -30,22 +34,13 @@ function Settings(props) {
         setpomodoroSettings({ ...props.pomodoroSettings, autoStarts: { ...autoStarts, [e.target.name]: e.target.checked } });
     }
 
-    useEffect(() => {
-        const ref = audioRef.current;
-        ref.src = audioURLs[parseInt(alarmSoundIndex)];
-        ref.play();
-        setTimeout(() => {
-            ref.pause();
-        }, 10000);
-    }, [alarmSoundIndex])
-
-    useEffect(() => {
-        audioRef.current.volume = alarmVolume;
-    }, [alarmVolume])
+    useAudio(audioAlarmRef, alarmSoundIndex, alarmVolume, audioURLs);
+    useAudio(audioTickingRef, tickingSoundIndex, tickingVolume, audioTicking);
 
     return (
         <Fragment>
-            <audio ref={audioRef} />
+            <audio ref={audioAlarmRef} />
+            <audio ref={audioTickingRef} loop />
             <Button className={classes.settingsButton} variant="contained" size="small" disableElevation startIcon={<SettingsIcon />} onClick={() => setOpen(true)}>Settings</Button>
             <Dialog open={open} onClose={handleClose} PaperProps={{ classes: { root: classes.dialogPaper } }}>
                 <Container className={classes.container}>
@@ -112,16 +107,16 @@ function Settings(props) {
                             </Grid>
                         </Grid>
                         <Grid container item spacing={2} justifyContent="space-between" alignItems="center" xs={12}>
-                            <Grid item xs={6}>
+                            <Grid item xs={5}>
                                 <Typography variant="body1">Alarm sound</Typography>
                             </Grid>
-                            <Grid item xs={3}>
-                                <Select variant="outlined" style={{ width: "100px", boxSizing: "border-box" }} size="small" value={alarmSoundIndex} onChange={(e) => { setpomodoroSettings({ ...props.pomodoroSettings, alarmSoundIndex: e.target.value }) }}>
-                                    <MenuItem value="0">Bell 1</MenuItem>
-                                    <MenuItem value="1">Bell 2</MenuItem>
-                                    <MenuItem value="2">Bell 3</MenuItem>
-                                    <MenuItem value="3">Alarm</MenuItem>
-                                    <MenuItem value="4">Dog</MenuItem>
+                            <Grid item xs={4}>
+                                <Select variant="outlined" style={{ width: "140px", boxSizing: "border-box" }} size="small" value={alarmSoundIndex} onChange={(e) => { setpomodoroSettings({ ...props.pomodoroSettings, alarmSoundIndex: e.target.value }) }}>
+                                    <MenuItem value="0">Medium Bell</MenuItem>
+                                    <MenuItem value="1">CowBell</MenuItem>
+                                    <MenuItem value="2">Dinner Bell</MenuItem>
+                                    <MenuItem value="3">Alarm Clock</MenuItem>
+                                    <MenuItem value="4">Owl</MenuItem>
                                 </Select>
                             </Grid>
                         </Grid>
@@ -137,7 +132,7 @@ function Settings(props) {
                                 <Typography variant="body1">repeat</Typography>
                             </Grid>
                             <Grid item xs={3}>
-                                <TextField type="number" size="small" variant="outlined" value={alarmRepeat} onChange={(e) => setpomodoroSettings({ ...props.pomodoroSettings, alarmRepeat: e.target.value >= 1 ? e.target.value : alarmRepeat })} />
+                                <TextField type="number" size="small" variant="outlined" value={alarmRepeat} onChange={(e) => setpomodoroSettings({ ...props.pomodoroSettings, alarmRepeat: e.target.value >= 1 ? parseInt(e.target.value) : alarmRepeat })} />
                             </Grid>
                             <Grid item xs={12}>
                                 <Divider />
@@ -147,20 +142,19 @@ function Settings(props) {
                             <Grid item xs={6}>
                                 <Typography variant="body1">Ticking sound</Typography>
                             </Grid>
-                            <Grid item xs={3}>
-                                <Select style={{ width: "100px" }} variant="outlined" size="small" value={tickingSound} onChange={(e) => setpomodoroSettings({ ...props.pomodoroSettings, tickingSound: e.target.value })}>
-                                    <MenuItem value="none">None</MenuItem>
-                                    <MenuItem value="tickingFast">Ticking fast</MenuItem>
-                                    <MenuItem value="tickingSlow">Ticking slow</MenuItem>
+                            <Grid item xs={4}>
+                                <Select style={{ width: "140px" }} variant="outlined" size="small" value={tickingSoundIndex} onChange={(e) => setpomodoroSettings({ ...props.pomodoroSettings, tickingSoundIndex: e.target.value })}>
+                                    <MenuItem value="0">Ticking slow</MenuItem>
+                                    <MenuItem value="1">Ticking fast</MenuItem>
                                 </Select>
                             </Grid>
                         </Grid>
                         <Grid container item spacing={2} justifyContent="flex-end" alignItems="center" xs={12}>
                             <Grid item xs={1}>
-                                <Typography variant="body1">{tickingVolume}</Typography>
+                                <Typography variant="body1">{tickingVolume * 100}</Typography>
                             </Grid>
                             <Grid item xs={4}>
-                                <Slider min={0} max={100} value={tickingVolume} onChange={(e, newValue) => setpomodoroSettings({ ...props.pomodoroSettings, tickingVolume: newValue / 100 })} />
+                                <Slider min={0} max={100} value={tickingVolume * 100} onChange={(e, newValue) => setpomodoroSettings({ ...props.pomodoroSettings, tickingVolume: newValue / 100 })} />
                             </Grid>
                         </Grid>
                     </Grid>
