@@ -106,7 +106,7 @@ function App() {
                     setpomodoroSettings({ ...pomodoroSettings, timer: pomodoroSettings.timer - 1 })
                     setAppBarTimerWidth(100 - ((pomodoroSettings.timer - 1) / pomodoroSettings.timers[pomodoroSettings.currentTab]) * 100);
                 }
-            }, 1000);
+            }, 50);
 
             return () => {
                 clearInterval(interval);
